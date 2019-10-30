@@ -1,7 +1,4 @@
-// Import stylesheets
-import './style.css';
-
-const SHA256 = require('crypto-js/SHA256')
+const SHA256 = require('crypto-js/sha256')
 
 class Block {
 	constructor(index, timestamp, data, previousHash = '') {
@@ -9,11 +6,11 @@ class Block {
 		this.timestamp = timestamp;
 		this.data = data;
 		this.previousHash = previousHash;
-		this.hash = this.calculatieHash();
+		this.hash = this.calculateHash();
 	}
 	
-	calculatieHash() {
-		return SHA256(this.index).toString();
+	calculateHash() {
+		return SHA256(this.index+this.previousHash+this.timestamp+JSON.stringify(this.data)).toString();
 	}
 	
 }
@@ -28,12 +25,12 @@ class Blockchain {
 	}
 	
 	getLatestBlock() {
-		return this.chain(this.chain.length -1);
+		return this.chain[this.chain.length -1];
 	}
 	
 	addBlock(newBlock) {
 		newBlock.previousHash= this.getLatestBlock().hash;
-		newBlock.hash = newBlock.calculatieHash()
+		newBlock.hash = newBlock.calculateHash()
 		this.chain.push(newBlock);
 	}
 
@@ -46,7 +43,7 @@ class Blockchain {
         return false;
       }
 
-      if(curBlock.hash !== curBlock.calculatieHash()) return false
+      if(curBlock.hash !== curBlock.calculateHash()) return false
 
       return true;
     }
@@ -66,12 +63,14 @@ develowCoin.chain[1].data = { amount: 30 };
 let isValid_test_2 = develowCoin.isValid();
 
 //temper the hash than validating
-develowCoin.chain[2].hash = develowCoin.chain[2].calculatieHash();
+develowCoin.chain[2].hash = develowCoin.chain[2].calculateHash();
 let isValid_test_3 = develowCoin.isValid();
 
 // Write Javascript code!
-const appDiv = document.getElementById('app');
-appDiv.innerHTML = JSON.stringify(develowCoin, null, 4);
-appDiv.innerHTML = JSON.stringify(isValid_test_1, null, 4);
-appDiv.innerHTML = JSON.stringify(isValid_test_2, null, 4);
-appDiv.innerHTML = JSON.stringify(isValid_test_3, null, 4);
+// const appDiv = document.getElementById('app');
+// appDiv.innerHTML = JSON.stringify(develowCoin, null, 4);
+// appDiv.innerHTML = JSON.stringify(isValid_test_1, null, 4);
+// appDiv.innerHTML = JSON.stringify(isValid_test_2, null, 4);
+// appDiv.innerHTML = JSON.stringify(isValid_test_3, null, 4);
+
+console.log(JSON.stringify(develowCoin, null, 4))
